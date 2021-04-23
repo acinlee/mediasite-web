@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Member> check_member = Optional.ofNullable(memberRepository.findMemberById(id));
-        if(check_member.isEmpty()) {
+        if(!check_member.isPresent()) {
             throw new UsernameNotFoundException("UsernameNotFoundException");
         }
 

@@ -42,7 +42,7 @@ public class MemberService{
     //ID 중복 검사
     public void validateDuplicateUserId(Member member) {
         Optional<Member> check_member = Optional.ofNullable(memberRepository.findMemberById(member.getId()));
-        if(!check_member.isEmpty()) {
+        if(check_member.isPresent()) {
             throw new validateException("이미 존재하는 Id입니다.");
         }
     }

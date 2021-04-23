@@ -17,7 +17,7 @@ public class PortfolioDto {
     private String writer;
     private String title;
     private String content;
-    private String flatform;
+    private List<String> flatform;
     private String otherForm;
     private String orderingCompany;
     private String launchingDate;
@@ -32,11 +32,9 @@ public class PortfolioDto {
 
     public class Flatform {
         private List<String> flatformlist;
-
         public List<String> getFlatformlist() {
             return flatformlist;
         }
-
         public void setFlatformlist(List<String> flatformList) {
             this.flatformlist = flatformList;
         }
@@ -53,15 +51,15 @@ public class PortfolioDto {
     }
 
     @Builder
-    public PortfolioDto(Long id, String writer, String title, String content, String flatform,
+    public PortfolioDto(Long id, String writer, String title, String content, List<String> flatform,
                         String otherForm, String orderingCompany, String launchingDate, LocalDate createdDate,
                         Exposure show_check, int show_sequence, String noticeYn, String secretYn, File file) {
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
-        /*this.flatform.addAll(flatform);*/
-        this.flatform = flatform;
+        this.flatform.addAll(flatform);
+        /*this.flatform = flatform;*/
         this.otherForm = otherForm;
         this.orderingCompany = orderingCompany;
         this.launchingDate = launchingDate;

@@ -44,14 +44,19 @@ public class PortfolioController {
     @GetMapping("/admin/portfolio/post")
     public String post(Model model) {
         model.addAttribute("portfolioDto", new PortfolioDto());
+        model.addAttribute("portfoliolist", getflatformlist());
+        List<PortfolioDto> portfolioDtoListTrue = portfolioService.getPortfolioListExposureTrue();
+        List<PortfolioDto> portfolioDtoListFalse = portfolioService.getPortfolioListExposureFalse();
         return "/admin/portfolio_write";
     }
 
     /* 글쓰기 버튼 누르면 /portfolio.write로 Post요청*/
    /*@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, )*/
     @PostMapping("/admin/portfolio/post")
-    public String write(@RequestParam("file") MultipartFile files, @Valid PortfolioDto portfolioDto, BindingResult result) {
+    public String write(@RequestParam("file") MultipartFile files, @Valid PortfolioDto portfolioDto,
+                        BindingResult result, @ModelAttribute PortfolioService.Flatform flatform) {
         Long portfolioId = portfolioService.savePost(portfolioDto);
+
         if(portfolioId != null){
             FileSave fileSave = new FileSave();
             fileSave.fileInfo(files);
@@ -78,7 +83,6 @@ public class PortfolioController {
     }*/
 
     //플랫폼
-    @ModelAttribute("flatformlist")
     public List<String> getflatformlist() {
         List<String> flatformlist = new ArrayList<String>();
         flatformlist.add("PC");

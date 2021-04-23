@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>포트폴리오 관리</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="/js/jquery-3.4.1.min.js"></script>
+
+</head>
+<body>
+    <!-- header -->
+    <header class="clear">
+        <h1>
+            <img src="/images/logo.png" alt="">
+        </h1>
+        <ul>
+            <li class="active">
+                <a href="portfolio.html">포트폴리오 관리</a>
+            </li>
+            <li>
+                <a href="introduce.html">회사소개서</a>
+            </li>
+            <li>
+                <a href="main_set.html">메인 관리</a>
+            </li>
+            <li>
+                <a href="alliance.html">제휴문의</a>
+            </li>
+        </ul>
+        <button class="logout_btn"></button>
+    </header>
+    <!-- // header -->
+
+    <!-- 컨텐츠 영역 -->
+
+    <main class="container">
+        <h2 class="title">포트폴리오 관리</h2>
+        <ul class="portfolio_list">
+            <li th:if="${postList.isEmpty()}">
+                게시글 없음
+            </li>
+            <li th:each="list : ${postList}">
+                <a href="portfolio_modify.html">
+                    <div class="img_con">
+                        <img src="/images/portfolio_01.png" alt="">
+                    </div>
+                    <div class="portfolio_txt">
+                        <strong>서비스명</strong>
+                        <input type="text" th:text="${list.title}">
+                        <div>
+                            <em>등록일</em>
+                            <span th:text="${list.createdDate}"></span>
+                        </div>
+                        <div>
+                            <em>작성자</em>
+                            <span th:text="${list.writer}">홍길동</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <div class="paging_con">
+            <ul class="paging clear">
+              <li class="first_page"><a href=""></a></li>
+              <li class="prev_page"><a href=""></a></li>
+              <li class="num_page"><a href="">1</a></li>
+              <li class="num_page"><a href="">2</a></li>
+              <li class="num_page active"><a href="">3</a></li>
+              <li class="num_page"><a href="">4</a></li>
+              <li class="num_page"><a href="">5</a></li>
+              <li class="num_page"><a href="">6</a></li>
+              <li class="num_page"><a href="">7</a></li>
+              <li class="num_page"><a href="">8</a></li>
+              <li class="num_page"><a href="">9</a></li>
+              <li class="num_page"><a href="">10</a></li>
+              <li class="next_page"><a href=""></a></li>
+              <li class="last_page"><a href=""></a></li>
+            </ul>
+        </div>
+
+        <div class="paging_with">
+            <a th:href="@{/admin/portfolio/post}" class="big_purple_btn w_120">신규 등록</a>
+        </div>
+    </main>
+    <!-- // 컨텐츠 영역 -->
+
+<script src="../assets/js/common.js"></script>
+</body>
+
+</html>

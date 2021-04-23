@@ -1,0 +1,21 @@
+std::vector
+std::array
+std::list
+std::map
+std::unordered_map
+std::pair
+
+std::string
+std::stringstream
+
+std::shared_ptr
+std::unique_ptr
+std::weak_ptr
+
+
+lamda
+
+c++ version (link 받을 예정)
+
+c++ boost -> library category
+

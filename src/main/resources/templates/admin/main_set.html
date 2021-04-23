@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>메인 관리</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="/js/jquery-3.4.1.min.js"></script>
+
+</head>
+<body>
+<!-- header -->
+    <header class="clear">
+        <h1>
+            <img src="/images/logo.png" alt="">
+        </h1>
+        <ul>
+            <li>
+                <a href="portfolio.html">포트폴리오 관리</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/introduction/}">회사소개서</a>
+            </li>
+            <li class="active">
+                <a th:href="@{/admin/mainpage}">메인 관리</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/businessList}">제휴문의</a>
+            </li>
+        </ul>
+        <button class="logout_btn" th:onclick="'location.href=\''+ @{/logout} + '\''"></button>
+    </header>
+<!-- // header -->
+
+<!-- 컨텐츠 영역 -->
+    <main class="container">
+        <h2 class="title">메인 관리</h2>
+        <div class="inp_box">
+            <div class="inp_list">
+                <h3 class="inp_title">노출여부</h3>
+                <input type="radio" id="chek_01" class="hide ch_ra" name="ra_01" data-val="exposure" checked>
+                <label for="chek_01" class="label radio">노출중</label>
+                <input type="radio" id="chek_02" class="hide ch_ra" name="ra_01" data-val="unexposure">
+                <label for="chek_02" class="label radio">미노출</label>
+            </div>
+        </div>
+
+        <span class="small_title martop_24 main_set exposure active" th:text="${'총 건수 : '+mainPageDtoListTrue.size()}" ></span>
+        <span class="small_title martop_24 main_set unexposure" th:text="${'총 건수 : '+mainPageDtoListFalse.size()}" ></span>
+
+        <!-- main_set 에 active 클래스 추가 시 표출됩니다 -->
+        <div class="main_set exposure active">
+            <form th:action="@{/admin/mainpage/post_edit}" id="edit_post_true" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+                <table class="table_type1">
+                    <colgroup>
+                        <col width="100px">
+                        <col width="280px">
+                        <col width="*">
+                        <col width="8%">
+                        <col width="6%">
+                        <col width="11%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>노출 순서</th>
+                        <th>이미지</th>
+                        <th>상세정보</th>
+                        <th>등록일</th>
+                        <th>작성자</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${mainPageDtoListTrue.isEmpty()}">
+                        <td>게시글 없음</td>
+                    </tr>
+                    <tr th:each="list, item : ${mainPageDtoListTrue}">
+                        <td>
+                            <input type="hidden" th:id="${'id'+item.index}" th:name="${'id'+item.index}"
+                                   th:value="${list.getId()}"/>
+                            <input type="text" class="w_70 text_center" th:id="${'exposure_sequence'+item.index}"
+                                   th:name="${'exposure_sequence'+item.index}" th:value="${list.exposure_sequence}">
+                        </td>
+                        <td>
+                            <div class="banner_con dis_inblock">
+                                <img th:src="@{${'/upload/' + list.file.getFilename()}}" alt="">
+                            </div>
+
+                            <div class="dis_inblock text_left">
+                                <input type="file" th:id="${'file_01'+item.index}" class="hide"
+                                       th:name="${'multipartFile'+item.index}" accept=".jpg, .jpeg, .png, .bmp, .gif">
+                                <label th:for="${'file_01'+item.index}" class="purple_btn">이미지 변경</label>
+                                <p th:id="${'list_file_size'+item.index}" th:text="${list.getFile().getFilesize()}"></p>
+                            </div>
+
+                        </td>
+                        <td>
+                            <div class="table_info">
+                                <span>서비스명</span>
+                                <input type="text" th:id="${'title'+item.index}" th:name="${'title'+item.index}"
+                                       th:value="${list.title}">
+                                <span>플랫폼</span>
+                                <input type="text" th:id="${'flatForm'+item.index}" th:name="${'flatForm'+item.index}"
+                                       th:value="${list.flatForm}">
+                                <div class="martop_12">
+                                    <span>발주처</span>
+                                    <input type="text" th:id="${'ordering_company'+item.index}"
+                                           th:name="${'ordering_company'+item.index}"
+                                           th:value="${list.ordering_company}">
+                                    <span>런칭일</span>
+                                    <input type="text" th:id="${'launching_date'+item.index}"
+                                           th:name="${'launching_date'+item.index}"
+                                           th:value="${list.launching_date}">
+                                </div>
+                            </div>
+                        </td>
+                        <td><span th:text="${#temporals.format(list.register_date, 'yyyy-MM-dd')}"></span></td>
+                        <td><span th:text="${list.writer}"></span></td>
+                        <td>
+                            <button class="purple_btn" th:name="${list.getId()}" onclick="changeExposure(this.name)">
+                                미노출
+                            </button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </form>
+            <div class="paging_con">
+                <ul class="paging clear">
+                  <li class="first_page"><a href=""></a></li>
+                  <li class="prev_page"><a href=""></a></li>
+                  <li class="num_page"><a href="">1</a></li>
+                  <li class="num_page"><a href="">2</a></li>
+                  <li class="num_page active"><a href="">3</a></li>
+                  <li class="num_page"><a href="">4</a></li>
+                  <li class="num_page"><a href="">5</a></li>
+                  <li class="num_page"><a href="">6</a></li>
+                  <li class="num_page"><a href="">7</a></li>
+                  <li class="num_page"><a href="">8</a></li>
+                  <li class="num_page"><a href="">9</a></li>
+                  <li class="num_page"><a href="">10</a></li>
+                  <li class="next_page"><a href=""></a></li>
+                  <li class="last_page"><a href=""></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main_set unexposure">
+            <table class="table_type1">
+                <colgroup>
+                    <col width="100px">
+                    <col width="280px">
+                    <col width="*">
+                    <col width="8%">
+                    <col width="6%">
+                    <col width="11%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>순서</th>
+                        <th>이미지</th>
+                        <th>상세정보</th>
+                        <th>등록일</th>
+                        <th>작성자</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${mainPageDtoListFalse.isEmpty()}">
+                    <td>게시글 없음</td>
+                </tr>
+                <tr th:each="list, item : ${mainPageDtoListFalse}">
+                    <td>
+                        <input type="hidden" th:id="${'id'+item.index}" th:name="${'id'+item.index}"
+                               th:value="${list.getId()}" />
+                        <input type="text" class="w_70 text_center" th:value="${item.index+1}">
+                    </td>
+                    <td>
+                        <div class="banner_con dis_inblock">
+                            <img th:src="@{${'/upload/' + list.file.getFilename()}}" alt="">
+                        </div>
+                        <div class="dis_inblock text_left">
+                            <input type="file" id="file_11" class="hide">
+                            <label for="file_11" class="purple_btn">이미지 변경</label>
+                            <p th:id="${'list_file_size'+item.index}" th:text="${list.getFile().getFilesize()}"></p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table_info">
+                            <span>서비스명</span>
+                            <input type="text" th:id="${'title'+item.index}" th:name="${'title'+item.index}"
+                                   th:value="${list.title}">
+                            <span>플랫폼</span>
+                            <input type="text" th:id="${'flatForm'+item.index}" th:name="${'flatForm'+item.index}"
+                                   th:value="${list.flatForm}">
+                            <div class="martop_12">
+                                <span>발주처</span>
+                                <input type="text" th:id="${'ordering_company'+item.index}" th:name="${'ordering_company'+item.index}"
+                                       th:value="${list.ordering_company}">
+                                <span>런칭일</span>
+                                <input type="text" th:id="${'launching_date'+item.index}" th:name="${'launching_date'+item.index}"
+                                       th:value="${list.launching_date}">
+                            </div>
+                        </div>
+                    </td>
+                    <td><span th:text="${#temporals.format(list.register_date, 'yyyy-MM-dd')}"></span></td>
+                    <td><span th:text="${list.writer}"></span></td>
+                    <td>
+                        <button class="purple_btn" th:name="${list.getId()}" onclick="changeExposure(this.name)">노출</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="paging_con">
+                <ul class="paging clear">
+                  <li class="first_page"><a href=""></a></li>
+                  <li class="prev_page"><a href=""></a></li>
+                  <li class="num_page"><a href="">1</a></li>
+                  <li class="num_page"><a href="">2</a></li>
+                  <li class="num_page active"><a href="">3</a></li>
+                  <li class="num_page"><a href="">4</a></li>
+                  <li class="num_page"><a href="">5</a></li>
+                  <li class="num_page"><a href="">6</a></li>
+                  <li class="num_page"><a href="">7</a></li>
+                  <li class="num_page"><a href="">8</a></li>
+                  <li class="num_page"><a href="">9</a></li>
+                  <li class="num_page"><a href="">10</a></li>
+                  <li class="next_page"><a href=""></a></li>
+                  <li class="last_page"><a href=""></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div>
+        <div class="paging_with clear main_set exposure active">
+            <input type="button" class="big_purple_btn left w_120" value="저장" onclick="submitController()" id="postEditTrue" name="postEditTrue">
+        </div>
+        <div class="paging_with clear main_set unexposure">
+            <input type="button" class="big_purple_btn left w_120" value="저장" id="postEditFalse" name="postEditFalse">
+        </div>
+        <div class="paging_with clear">
+            <button class="big_purple_btn right img_btn w_120" type="button">신규 등록</button>
+        </div>
+        </div>
+
+        <!-- 팝업 -->
+        <!-- 이미지 변경 -->
+        <form th:action="@{/admin/mainpage/post}" th:object="${mainPageDto}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+        <div class="layer_position img_pop">
+            <div class="pop_back"></div>
+            <div class="modal_con">
+                <button class="close_btn modal_close" title="닫기" type="button"></button>
+                <strong class="modal_title">이미지 변경</strong>
+                <div class="clear">
+                    <div class="left">
+                        <div class="clear martop_6">
+                            <input type="file" name="file" id="file_20" class="hide" accept=".jpg, .jpeg, .png, .bmp, .gif">
+                            <label for="file_20" class="purple_btn w_88 left">찾아보기</label>
+                            <span class="right" id="file_size"></span>
+                        </div>
+                        <div class="img_con martop_12">
+                            <img id="image_section" src="#" alt="">
+                        </div>
+                    </div>
+                    <div class="table_info right">
+                        <div class="martop_10">
+                            <span>서비스명</span>
+                            <input type="text" th:field="*{title}">
+                        </div>
+                        <div class="martop_10">
+                            <span>플랫폼</span>
+                            <input type="text" th:field="*{flatForm}">
+                        </div>
+                        <div class="martop_10">
+                            <span>발주처</span>
+                            <input type="text" th:field="*{ordering_company}">
+                        </div>
+                        <div class="martop_10">
+                            <span>런칭일</span>
+                            <input type="text" th:field="*{launching_date}">
+                        </div>
+                        <div class="martop_10">
+                            <span>등록일</span>
+                            <em id="today_date">2020-12-24</em>
+                            <span class="marleft_46">작성자</span>
+                            <em th:text="${userName}"></em>
+                        </div>
+                    </div>
+                </div>
+                <!-- <p class="modal_txt">아이디 또는 비밀번호가 잘못 입력 되었습니다.</p>
+                <p class="col_purple text_center">(회원 가입 승인 완료 후 이용 가능합니다.)</p> -->
+                <div class="btn_center">
+                    <button class="blue_btn w_120 confirm_close" type="submit">저장</button>
+                    <button class="grey_btn w_120 modal_close" type="button">취소</button>
+                </div>
+            </div>
+        </div>
+        </form>
+        <!-- // 이미지 변경 -->
+
+        <!-- 컨펌 -->
+        <div class="layer_position confirm">
+            <div class="pop_back"></div>
+            <div class="modal_con">
+                <p class="modal_txt">누락된 정보가 있습니다.</p>
+                <p class="col_purple text_center">모든 정보 입력 후 등록해 주세요.</p>
+                <div class="btn_center">
+                    <button class="blue_btn w_120 modal_close">확인</button>
+                </div>
+            </div>
+        </div>
+        <!-- // 컨펌 -->
+        <!-- // 팝업 -->
+
+    </main>
+<!-- // 컨텐츠 영역 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    //현재 날짜 집어 넣기, 파일 사이즈 집어 넣기
+    $(document).ready(function (){
+        let today = new Date();
+
+        let year = today.getFullYear(); // 년도
+        let month = today.getMonth() + 1;  // 월
+        let date = today.getDate();  // 날짜
+        if(month.toString().length == 1){
+            $("#today_date").text(year + '-0' + month + "-" + date);
+        }
+        else {
+            $("#today_date").text(year + '-' + month + "-" + date);
+        }
+        fileSizeCheck();
+    });
+
+    function fileSizeCheck(){
+        var listSize = /*[[${mainPageDtoListTrue.size()}]]*/;
+        var fileSize;
+        var sizeArray = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        var match;
+        if(listSize > 0){
+            for(var i = 0; i < listSize; i++){
+                fileSize = document.getElementById("list_file_size" + i).innerText;
+                match = Math.floor(Math.log(fileSize)/Math.log(1024));
+                if(match == "-Infinity"){
+                    $("#list_file_size"+i).text("0 "+sizeArray[0]);
+                }
+                else{
+                    $("#list_file_size"+i).text((fileSize/Math.pow(1024, Math.floor(match))).toFixed(2)+" "+sizeArray[match]);
+                }
+            }
+        }
+    }
+
+    //업로드한 이미지 미리보기 함수
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            //파일 사이즈 추출
+            var fileSize = input.files[0].size;
+            var sizeArray = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+            var match = Math.floor(Math.log(fileSize)/Math.log(1024));
+            if(match == "-Infinity"){
+                $("#file_size").text("0 "+sizeArray[0]);
+            }
+            else{
+                $("#file_size").text((fileSize/Math.pow(1024, Math.floor(match))).toFixed(2)+" "+sizeArray[match]);
+            }
+
+            //이미지 미리보기
+            reader.onload = function (e) {
+                $('#image_section').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // 이벤트를 바인딩해서 input에 파일이 올라올때 위의 함수를 this context로 실행합니다.
+    $("#file_20").change(function(){
+        readURL(this);
+    });
+
+    $(function () {
+        // 노출, 미노출 탭
+        $("[type=radio][name=ra_01]").on("change", function(){
+            var data = $(this).attr("data-val");
+            if(data == "exposure"){ // 노출중
+                $(".main_set.exposure").addClass("active");
+                $(".main_set.unexposure").removeClass("active");
+            } else if(data =="unexposure") { // 미노출
+                $(".main_set.unexposure").addClass("active");
+                $(".main_set.exposure").removeClass("active");
+            }
+        });
+
+        // 이미지 변경 팝업
+        $(".img_btn").on("click", function () {
+            $(".img_pop").addClass('active');
+        });
+
+        // 컨펌 팝업
+        $('.confirm_close').on('click', function () {
+            $('.layer_position.confirm').addClass('active');
+        })
+    })
+
+    //순서 체크 함수
+    function sequence_check() {
+        var listSize = /*[[${mainPageDtoListTrue.size()}]]*/;
+        var exposure_sequence;
+        var list = [];
+        var check = new Boolean(true);
+
+        for (var i = 0; i < listSize; i++) {
+            exposure_sequence = document.getElementById("exposure_sequence" + i).value;
+            list.push(exposure_sequence);
+        }
+
+        for (var i = 0; i < listSize; i++) {
+            if (list[i] > listSize || list[i] <= 0) {
+                alert("순서를 다시 입력해주세요(잘못된 숫자 입력)");
+                check = false;
+                return check;
+            } else if (list.includes((i + 1).toString()) == false) {
+                //중복 순서를 입력하게 되면 특정 숫자는 순서에 포함이 안되는 것을 이용
+                alert("중복 순서 입력");
+                check = false;
+                return check;
+            }
+        }
+
+        return check;
+    }
+
+    function submitController() {
+        var listSize = /*[[${mainPageDtoListTrue.size()}]]*/;
+        //토큰
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var form;
+        var formData;
+
+        $("#edit_post_true").each(function (){
+            for(var i = 0; i<listSize; i++){
+                $(this).find("input[name=id"+i+"]").attr("name", "main[" + i + "].id");
+                $(this).find("input[name=title"+i+"]").attr("name", "main[" + i + "].title");
+                $(this).find("input[name=flatForm"+i+"]").attr("name", "main[" + i + "].flatForm");
+                $(this).find("input[name=ordering_company"+i+"]").attr("name", "main[" + i + "].ordering_company");
+                $(this).find("input[name=launching_date"+i+"]").attr("name", "main[" + i + "].launching_date");
+                $(this).find("input[name=multipartFile"+i+"]").attr("name", "main[" + i + "].multipartFile");
+                $(this).find("input[name=exposure_sequence"+i+"]").attr("name", "main[" + i + "].exposure_sequence");
+            }
+        });
+
+        form = $('#edit_post_true')[0];
+        formData = new FormData(form)
+        ;
+        if(sequence_check() == true){
+            $.ajax({
+                enctype: 'multipart/form-data',
+                url: '/admin/mainpage/post_edit',
+                type: 'post',
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: formData,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);	// 헤드의 csrf meta태그를 읽어 CSRF 토큰 함께 전송
+                },
+                success: function (data) {
+                    console.log("저장 완료");
+                    location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+    }
+
+
+    //controller에 값 보내는 함수 (미 노출 탭)
+    $("#postEditFalse").click(function () {
+        //토큰
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        var list = [];
+        var object_id;
+        var title;
+        var flatForm;
+        var ordering_company;
+        var launching_date;
+
+        //controller에서 직접 여기에 이런식으로 값을 넣을 수 있음
+        var listSize = /*[[${mainPageDtoListFalse.size()}]]*/;
+        for (var i = 0; i < listSize; i++) {
+            object_id = document.getElementById("id" + i).value;
+            title = document.getElementById("title" + i).value;
+            flatForm = document.getElementById("flatForm" + i).value;
+            ordering_company = document.getElementById("ordering_company" + i).value;
+            launching_date = document.getElementById("launching_date" + i).value;
+
+            list[i] = {
+                "id": object_id,
+                "title": title, "flatForm": flatForm,
+                "ordering_company": ordering_company, "launching_date": launching_date
+            };
+        }
+        //ajax
+        $.ajax({
+            enctype: 'multipart/form-data',
+            url: '/admin/mainpage/post_edit',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(list),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);	// 헤드의 csrf meta태그를 읽어 CSRF 토큰 함께 전송
+            },
+            success: function (data) {
+                console.log("저장 완료");
+                location.reload();
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+
+    });
+
+    //노출 상태 변경
+    function changeExposure(clicked_name){
+        //토큰
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        var mainDtoId = clicked_name;
+
+        //ajax
+        $.ajax({
+            enctype: 'multipart/form-data',
+            url: '/change/mainExposure',
+            type: 'post',
+            dataType: 'json',
+            data: {'mainDtoId' : mainDtoId},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);	// 헤드의 csrf meta태그를 읽어 CSRF 토큰 함께 전송
+            },
+            success: function (data) {
+                console.log("전송 완료");
+                location.reload();
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+</script>
+
+<script src="/js/common.js"></script>
+</body>
+
+</html>

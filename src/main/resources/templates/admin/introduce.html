@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>회사소개서</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="/js/jquery-3.4.1.min.js"></script>
+
+</head>
+<body>
+    <!-- header -->
+    <header class="clear">
+        <h1>
+            <img src="/images/logo.png" alt="">
+        </h1>
+        <ul>
+            <li>
+                <a href="portfolio.html">포트폴리오 관리</a>
+            </li>
+            <li class="active">
+                <a th:href="@{/admin/introduction/}">회사소개서</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/mainpage}">메인 관리</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/businessList}">제휴문의</a>
+            </li>
+        </ul>
+        <button class="logout_btn" th:onclick="'location.href=\''+ @{/logout} + '\''"></button>
+    </header>
+    <!-- // header -->
+
+    <!-- 컨텐츠 영역 -->
+    <main class="container">
+        <h2 class="title">회사소개서</h2>
+        <table class="table_type1 txt_left3">
+            <colgroup>
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 60%">
+                <col style="width: 20%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>등록일</th>
+                    <th>작성자</th>
+                    <th>변경내용</th>
+                    <th>다운로드</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${introductionDtoList.isEmpty()}">
+                    <td>게시글 없음</td>
+                </tr>
+                <tr th:each="list : ${introductionDtoList}">
+                    <td th:text="${#temporals.format(list.getRegister_date(), 'yyyy-MM-dd')}"></td>
+                    <td th:text="${list.getWriter()}">홍길동</td>
+                    <td th:text="${list.getContent()}">프로젝트 추가</td>
+
+                    <td th:if="${list.file.getId() == null}">
+                        첨부파일 없음
+                    </td>
+                    <td th:if="${list.file.getId() != null}">
+                        <a class="down_btn" th:href="@{'/download/' + ${list.file.getId()}}" >다운로드</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="martop_24 clear">
+            <button class="w_120 blue_btn right modal_open">신규등록</button>
+        </div>
+
+        <!-- 팝업 -->
+        <!-- 신규 등록 -->
+        <form th:action="@{/admin/introduction/post}" th:object="${introductionDto}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+        <div class="layer_position">
+            <div class="pop_back"></div>
+            <div class="modal_con">
+                <button class="close_btn modal_close" title="닫기" type="button"></button>
+                <strong class="modal_title">신규 등록</strong>
+                <table class="table_type2 w_550">
+                    <colgroup>
+                        <col width="30%">
+                        <col width="70%">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th class="important">변경내용</th>
+                            <td>
+                                <textarea rows="3" class="w_full" th:field="*{content}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="important">파일 등록</th>
+                            <td>
+                                <input type="file" name="file" id="find" class="hide">
+                                <input type="text" class="w_240" id="file_find">
+                                <label for="find" class="w_88 big_purple_btn marleft_6">파일찾기</label>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <div class="btn_center">
+                    <button class="blue_btn w_120 confirm_close" type="submit">등록 완료</button>
+                    <button class="grey_btn w_120 modal_close" type="button">취소</button>
+                </div>
+            </div>
+        </div>
+        </form>
+        <!-- // 신규 등록 -->
+        <!-- // 팝업 -->
+
+    </main>
+    <!-- // 컨텐츠 영역 -->
+
+<script>
+    $(function () {
+
+        // 팝업 오픈
+        $('.modal_open').on('click', function () {
+            $('.layer_position').addClass('active');
+        })
+
+        // 파일 등록 인풋
+        var fileTarget = $('#find');
+
+        fileTarget.on('change', function () {
+            if (window.FileReader) {
+                var filename = $(this)[0].files[0].name;
+            } else {
+                var filename = $(this).val().split('/').pop().split('\\').pop();
+            }
+
+            $(this).siblings('#file_find').val(filename);
+        });
+
+    })
+</script>
+
+<script src="/js/common.js"></script>
+</body>
+
+</html>

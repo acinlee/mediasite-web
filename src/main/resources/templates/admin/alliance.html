@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>제휴 문의</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="/js/jquery-3.4.1.min.js"></script>
+
+</head>
+<body>
+    <!-- header -->
+    <header class="clear">
+        <h1>
+            <img src="/images/logo.png" alt="">
+        </h1>
+        <ul>
+            <li>
+                <a href="portfolio.html">포트폴리오 관리</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/introduction/}">회사소개서</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/mainpage}">메인 관리</a>
+            </li>
+            <li class="active">
+                <a th:href="@{/admin/businessList}">제휴문의</a>
+            </li>
+        </ul>
+        <button class="logout_btn" th:onclick="'location.href=\''+ @{/logout} + '\''"></button>
+    </header>
+    <!-- // header -->
+
+    <!-- 컨텐츠 영역 -->
+    <main class="container">
+        <h2 class="title">제휴 문의</h2>
+        <table class="table_type1 txt_left2">
+            <colgroup>
+                <col style="width: 10%">
+                <col style="width: 60%">
+                <col style="width: 20%">
+                <col style="width: 10%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>등록일</th>
+                    <th>제목</th>
+                    <th>회사명</th>
+                    <th>담당자</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${businessList.isEmpty()}">
+                    <td>게시글 없음</td>
+                </tr>
+                <tr th:each="list : ${businessList}">
+                    <td th:text="${#temporals.format(list.register_date, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <a th:href="@{'/admin/businessList/'+ ${list.getId()}}" class="link" th:text="${list.getTitle()}"></a>
+                    </td>
+                    <td th:text="${list.getCompany_name()}"></td>
+                    <td th:text="${list.getManager()}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="paging_con">
+            <ul class="paging clear">
+              <li class="first_page"><a href=""></a></li>
+              <li class="prev_page"><a href=""></a></li>
+              <li class="num_page"><a href="">1</a></li>
+              <li class="num_page"><a href="">2</a></li>
+              <li class="num_page active"><a href="">3</a></li>
+              <li class="num_page"><a href="">4</a></li>
+              <li class="num_page"><a href="">5</a></li>
+              <li class="num_page"><a href="">6</a></li>
+              <li class="num_page"><a href="">7</a></li>
+              <li class="num_page"><a href="">8</a></li>
+              <li class="num_page"><a href="">9</a></li>
+              <li class="num_page"><a href="">10</a></li>
+              <li class="next_page"><a href=""></a></li>
+              <li class="last_page"><a href=""></a></li>
+            </ul>
+        </div>
+
+        <!-- 팝업 -->
+        <!-- 신규 등록 -->
+        <div class="layer_position">
+            <div class="pop_back"></div>
+            <div class="modal_con">
+                <button class="close_btn modal_close" title="닫기"></button>
+                <strong class="modal_title">신규 등록</strong>
+                <table class="table_type2 w_550">
+                    <colgroup>
+                        <col width="30%">
+                        <col width="70%">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th class="important">변경내용</th>
+                            <td>
+                                <textarea rows="3" class="w_full"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="important">파일 등록</th>
+                            <td>
+                                <input type="file" id="find" class="hide">
+                                <input type="text" class="w_240" id="file_find">
+                                <label for="find" class="w_88 big_purple_btn marleft_6">파일찾기</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="btn_center">
+                    <button class="blue_btn w_120 confirm_close">등록 완료</button>
+                    <button class="grey_btn w_120 modal_close">취소</button>
+                </div>
+            </div>
+        </div>
+        <!-- // 신규 등록 -->
+        <!-- // 팝업 -->
+
+    </main>
+    <!-- // 컨텐츠 영역 -->
+
+<script>
+    $(function () {
+
+        // 파일 등록 인풋
+        var fileTarget = $('#find');
+
+        fileTarget.on('change', function () {
+            if (window.FileReader) {
+                var filename = $(this)[0].files[0].name;
+            } else {
+                var filename = $(this).val().split('/').pop().split('\\').pop();
+            }
+
+            $(this).siblings('#file_find').val(filename);
+        });
+
+    })
+</script>
+
+<script src="/js/common.js"></script>
+</body>
+
+</html>

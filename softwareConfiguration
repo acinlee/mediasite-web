@@ -1,0 +1,29 @@
+oracle java 1.8
+java 8
+springboot 2.4.4
+Project : gradle project
+DB : MySQL 8.0.23
+JPA 사용
+
+yml 설정 파일 정보
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cudo_db?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: Cudo6411!
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show-sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hiberante.type: trace
+
+
+

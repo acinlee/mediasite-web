@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -18,16 +18,16 @@
         </h1>
         <ul>
             <li class="active">
-                <a href="portfolio.html">포트폴리오 관리</a>
+                <a th:href="@{/admin/portfolio/list}">포트폴리오 관리</a>
             </li>
             <li>
-                <a href="introduce.html">회사소개서</a>
+                <a th:href="@{/admin/introduction/}">회사소개서</a>
             </li>
             <li>
-                <a href="main_set.html">메인 관리</a>
+                <a th:href="@{/admin/mainpage}">메인 관리</a>
             </li>
             <li>
-                <a href="alliance.html">제휴문의</a>
+            <a th:href="@{/admin/businessList}">제휴문의</a>
             </li>
         </ul>
         <button class="logout_btn"></button>
@@ -36,6 +36,7 @@
 
     <!-- 컨텐츠 영역 -->
     <main class="container">
+        <form th:action="@{/admin/portfolio_write/portfolio_modify}" th:object="${post}" method="get" enctype="multipart/form-data" accept-charset="UTF-8">
         <h2 class="title">포트폴리오 관리<span>*표시는 필수입력정보 입니다.</span></h2>
         <table class="table_type2">
             <colgroup>
@@ -46,45 +47,45 @@
                 <tr>
                     <th class="important">서비스명</th>
                     <td>
-                        <input type="text" class="w_full">
+                        <input type="text" class="w_full" th:text="${post.getTitle()}">
                     </td>
                 </tr>
                 <tr>
                     <th class="important">서비스 설명</th>
                     <td>
-                        <textarea rows="8" class="w_full"></textarea>
+                        <textarea rows="8" class="w_full" th:text="${post.getContent()}"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th class="important">플랫폼</th>
                     <td>
                         <div class="table_inp">
-                            <input type="checkbox" id="chek_01" class="hide ch_ra">
+                            <input type="checkbox" id="chek_01" class="hide ch_ra" th:checked="${post.getFlatform()}">
                             <label for="chek_01" class="label check">PC</label>
-                            <input type="checkbox" id="chek_02" class="hide ch_ra">
+                            <input type="checkbox" id="chek_02" class="hide ch_ra" th:checked="${post.getFlatform()}">
                             <label for="chek_02" class="label check">mobile web</label>
-                            <input type="checkbox" id="chek_03" class="hide ch_ra">
+                            <input type="checkbox" id="chek_03" class="hide ch_ra" th:checked="${post.getFlatform()}">
                             <label for="chek_03" class="label check">app</label>
-                            <input type="checkbox" id="chek_04" class="hide ch_ra">
+                            <input type="checkbox" id="chek_04" class="hide ch_ra" th:checked="${post.getFlatform()}">
                             <label for="chek_04" class="label check">PC Client</label>
-                            <input type="checkbox" id="chek_05" class="hide ch_ra">
+                            <input type="checkbox" id="chek_05" class="hide ch_ra" th:checked="${post.getFlatform()}">
                             <label for="chek_05" class="label check">glass</label>
-                            <input type="checkbox" id="chek_06" class="hide ch_ra">
+                            <input type="checkbox" id="chek_06" class="hide ch_ra" th:checked="${post.getFlatform()}">
                             <label for="chek_06" class="label check">기타</label>
-                            <input type="text" class="w_200 marleft_12">
+                            <input type="text" class="w_200 marleft_12" th:text="${post.getOtherForm()}">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <th class="important">발주사</th>
                     <td>
-                        <input type="text" class="w_full">
+                        <input type="text" class="w_full" th:text="${post.getOrderingCompany()}">
                     </td>
                 </tr>
                 <tr>
                     <th class="important">런칭일</th>
                     <td>
-                        <input type="text" class="w_full">
+                        <input type="text" class="w_full" th:object="${post.getLaunchingDate()}">
                     </td>
                 </tr>
                 <tr>
@@ -133,10 +134,10 @@
         </table>
 
         <div class="martop_24 clear">
-            <a href="portfolio.html" class="w_120 grey_btn">목록</a>
-            <a href="portfolio.html" class="w_120 blue_btn right">확인</a>
+            <a th:href="@{/admin/portfolio/list}" class="w_120 grey_btn">목록</a>
+            <a th:href="@{/admin/portfolio/list}" class="w_120 blue_btn right">확인</a>
         </div>
-
+        </form>
     </main>
     <!-- // 컨텐츠 영역 -->
 

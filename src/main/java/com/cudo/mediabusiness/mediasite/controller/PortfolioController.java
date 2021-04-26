@@ -8,6 +8,7 @@ import com.cudo.mediabusiness.mediasite.service.FileService;
 import com.cudo.mediabusiness.mediasite.service.PortfolioService;
 import com.cudo.mediabusiness.mediasite.util.FileSave;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
 
@@ -38,11 +39,18 @@ public class PortfolioController {
     public String list(Model model) {
         List<PortfolioDto> portfolioDtoList = portfolioService.getPortfolioList();
         model.addAttribute("postList" , portfolioDtoList);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("index.html");
+        mav.addObject("flatformobj", getflatformlist());
+        mav.addObject("predefinedhobbylist", getflatformlist());
+
         return "/admin/portfolio";
     }
 
     @GetMapping("/admin/portfolio/post")
     public String post(Model model) {
+        boolean portfoliolist = false;
         model.addAttribute("portfolioDto", new PortfolioDto());
         model.addAttribute("portfoliolist", getflatformlist());
         List<PortfolioDto> portfolioDtoListTrue = portfolioService.getPortfolioListExposureTrue();
@@ -55,26 +63,29 @@ public class PortfolioController {
     @PostMapping("/admin/portfolio/post")
     public String write(@RequestParam("file") MultipartFile files, @Valid PortfolioDto portfolioDto,
                         BindingResult result, @ModelAttribute PortfolioService.Flatform flatform) {
+        ModelAndView mav = new ModelAndView();
         Long portfolioId = portfolioService.savePost(portfolioDto);
-
-        if(portfolioId != null){
+        mav.addObject("flatformsselected", flatform.getFlatformlist());
+        //파일 변환 및 저장
+        if (portfolioId != null) {
+            //파일 저장 클래스
             FileSave fileSave = new FileSave();
             fileSave.fileInfo(files);
 
+            //dto에 파일 저장
             FileDto fileDto = new FileDto();
             fileDto.setOrigin_file_name(fileSave.getOriginFilename());
             fileDto.setFilesize(fileSave.getFileSize());
             fileDto.setFilename(fileSave.getConversionFilename());
             fileDto.setFilepath(fileSave.getFilePath());
 
+            //파일 id 값
             Long send_id = fileService.saveFile(fileDto);
             if (send_id != null) {
                 portfolioService.savePost(portfolioId, send_id);
             }
-            return "redirect:/";
-        } else {
-            return "portfolio_write";
         }
+        return "redirect:/admin/portfolio_write";
     }
 
 /*    @GetMapping("/admin/portfolio/post")
@@ -117,7 +128,7 @@ public class PortfolioController {
     public String edit(@PathVariable("id") Long id, Model model) {
         PortfolioDto portfolioDto = portfolioService.getPost(id);
         model.addAttribute("post", portfolioDto );
-        return "html/portfolio_modify";
+        return "admin/portfolio_modify";
     }
 
     @PutMapping("/admin/portfolio_write/portfolio_modify/{id}")

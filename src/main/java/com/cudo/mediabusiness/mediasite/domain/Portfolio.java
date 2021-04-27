@@ -23,7 +23,7 @@ public class Portfolio {
     private Long id;
 
     //작성자
-    private String writer;
+    //private String writer;
 
     //제목
     @Column(length = 40, nullable = false)
@@ -48,7 +48,7 @@ public class Portfolio {
     private String launchingDate;
 
     //등록 날짜
-    private LocalDate createdDate;
+    //private LocalDate createdDate;
 
     //메인 페이지에 노출 여부
     @Enumerated(EnumType.STRING)
@@ -57,25 +57,25 @@ public class Portfolio {
     private int show_sequence = 0;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "file_id")
+    @JoinColumn(name = "img_01")
     private File file;
 
-    /*@OneToMany(mappedBy = "portfolio")
-    private List<File> file = new ArrayList<>();*/
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "img_03")
+    private File mFile;
 
     @Builder
-    public Portfolio(Long id, String writer, String title, String content, String otherForm, String flatform,
-                     String orderingCompany, String launchingDate, LocalDate createdDate, File file, int show_sequence){
+    public Portfolio(Long id, String title, String content, String otherForm, String flatform,
+                     String orderingCompany, String launchingDate, File file, File mFile, int show_sequence){
         this.id = id;
-        this.writer = writer;
         this.title = title;
         this.content = content;
         this.otherForm = otherForm;
         this.flatform = flatform;
         this.orderingCompany = orderingCompany;
         this.launchingDate = launchingDate;
-        this.createdDate = createdDate;
         this.file = file;
+        this.mFile = mFile;
         this.show_sequence = show_sequence;
     }
 
@@ -86,19 +86,19 @@ public class Portfolio {
         // constructor and getter
     }*/
 
-   /* public class Flatform {
+    /* public class Flatform {
 
 
-        @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-        @JoinTable(
-                name = "flaforms_roles",
-                joinColumns = @JoinColumn(name = "flatform_id"),
-                inverseJoinColumns = @JoinColumn(name = "flat_id")
-        )
-        private Set<Flatform> flatforms = new HashSet<>();
+         @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+         @JoinTable(
+                 name = "flaforms_roles",
+                 joinColumns = @JoinColumn(name = "flatform_id"),
+                 inverseJoinColumns = @JoinColumn(name = "flat_id")
+         )
+         private Set<Flatform> flatforms = new HashSet<>();
 
-    }
-*/
+     }
+ */
     protected Portfolio() {
 
     }

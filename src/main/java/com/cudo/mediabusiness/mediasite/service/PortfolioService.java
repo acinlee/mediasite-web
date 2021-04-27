@@ -47,8 +47,6 @@ public class PortfolioService {
             PortfolioDto portfolioDto = PortfolioDto.builder()
                     .id(port.getId())
                     .title(port.getTitle())
-                    .createdDate(port.getCreatedDate())
-                    .writer(port.getWriter())
                     .show_check(port.getShow_check())
                     .show_sequence(port.getShow_sequence())
                     .file(port.getFile())
@@ -77,7 +75,7 @@ public class PortfolioService {
         return portfolioDto;
     }
 
-    //플랫폼
+    /*//플랫폼
     public class Flatform {
         private List<String> flatformlist;
 
@@ -89,9 +87,9 @@ public class PortfolioService {
             this.flatformlist = flatformList;
         }
     }
+*/
 
-
-   /* 플랫폼 */
+    /* 플랫폼 */
 //    public List<String> getFlatform(String flat){
 //        return portfolioRepository.getflatform(flat);
 //    }
@@ -120,31 +118,7 @@ public class PortfolioService {
 
     public void savePost(Long portfolioId, Long send_id) {
     }
-    /*@Transactional
-    public void showExposure(Long id){
-        Portfolio portfolio = portfolioRepository.findById(id);
-        List<Portfolio> portfolioList = portfolioRepository.findAllExposure();
-
-
-        int sequence = portfolio.getShow_sequence();
-
-        //미노출
-        if(portfolio.getShow_check() == Exposure.TRUE){
-            if(getPortfolioList.size() != sequence){
-                for(Portfolio portObject : portFolioList){
-                    if(portObject.getShow_sequence() > sequence){
-                        portObject.getShow_sequence(portObject.getShow_sequence() - 1);
-                    }
-                }
-            }
-
-            portfolio.showExposure(Exposure.FALSE, 0);
-        }
-        //노출
-        else{
-            portfolio.showExposure(Exposure.TRUE, portfolioList.size()+1);
-        }*/
-    }
+}
 
 
 

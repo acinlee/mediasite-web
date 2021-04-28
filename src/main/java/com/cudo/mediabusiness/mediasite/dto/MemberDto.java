@@ -39,9 +39,10 @@ public class MemberDto {
     }
 
     @Builder
-    public MemberDto(String id, String password) {
+    public MemberDto(String id, String password, String name) {
         this.id = id;
         this.password = password;
+        this.name = name;
     }
 
 }

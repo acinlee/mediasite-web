@@ -1,5 +1,6 @@
 package com.cudo.mediabusiness.mediasite.controller;
 
+import com.cudo.mediabusiness.mediasite.common.UserAuthorization;
 import com.cudo.mediabusiness.mediasite.dto.FileDto;
 import com.cudo.mediabusiness.mediasite.dto.MainPageDto;
 import com.cudo.mediabusiness.mediasite.dto.MainPageListDto;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MainPageController {
     private final MainPageService mainPageService;
     private final FileService fileService;
+    private final UserAuthorization userAuthorization;
 
     //노출 페이지
     @GetMapping("/admin/mainpage")
@@ -30,7 +32,7 @@ public class MainPageController {
         List<MainPageDto> mainPageDtoListFalse = mainPageService.getMainPageListExposureFalse();
         model.addAttribute("mainPageDtoListTrue", mainPageDtoListTrue);
         model.addAttribute("mainPageDtoListFalse", mainPageDtoListFalse);
-        model.addAttribute("userName", mainPageService.getSessionUser());
+        model.addAttribute("userName", userAuthorization.getSessionUser());
         model.addAttribute("mainPageDto", new MainPageDto());
         model.addAttribute("MainPageListDto", new MainPageListDto());
         return "/admin/main_set";

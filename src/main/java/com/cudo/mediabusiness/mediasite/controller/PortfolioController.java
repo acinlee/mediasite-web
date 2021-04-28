@@ -1,5 +1,6 @@
 package com.cudo.mediabusiness.mediasite.controller;
 
+import com.cudo.mediabusiness.mediasite.common.UserAuthorization;
 import com.cudo.mediabusiness.mediasite.domain.Portfolio;
 import com.cudo.mediabusiness.mediasite.dto.FileDto;
 import com.cudo.mediabusiness.mediasite.dto.PortfolioDto;
@@ -30,9 +31,9 @@ import java.util.logging.Logger;
 @Controller
 @RequiredArgsConstructor
 public class PortfolioController {
-
     private final PortfolioService portfolioService;
     private final FileService fileService;
+    private final UserAuthorization userAuthorization;
 
     /* 목록 */
     @GetMapping("/admin/portfolio/list")
@@ -64,13 +65,9 @@ public class PortfolioController {
     public String write(HttpServletRequest request, @RequestPart("img_01") MultipartFile files,
                         @RequestPart("img_03") MultipartFile mfiles,
                         @Valid PortfolioDto portfolioDto, BindingResult result) {
-        portfolioDto.getFlatform();
-        portfolioDto.getOtherForm();
-        portfolioDto.getFile();
-
-        ModelAndView mav = new ModelAndView();
+        portfolioDto.setWriter(userAuthorization.getSessionUser());
+/*        portfolioDto.setCreatedDate();*/
         Long portfolioId = portfolioService.savePost(portfolioDto);
-        /*mav.addObject("flatformsselected", flatform.getFlatformlist());*/
         //파일 변환 및 저장
         if (portfolioId != null) {
             //파일 저장 클래스

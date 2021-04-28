@@ -1,5 +1,6 @@
 package com.cudo.mediabusiness.mediasite.service;
 
+import com.cudo.mediabusiness.mediasite.common.UserAuthorization;
 import com.cudo.mediabusiness.mediasite.domain.MainPage;
 import com.cudo.mediabusiness.mediasite.domain.enumpackage.Exposure;
 import com.cudo.mediabusiness.mediasite.dto.MainPageDto;
@@ -20,12 +21,13 @@ import java.util.List;
 public class MainPageService {
     private final MainPageRepository mainPageRepository;
     private final FileRepository fileRepository;
+    private final UserAuthorization userAuthorization;
 
     //글 등록
     @Transactional
     public Long saveMain(MainPageDto mainPageDto) {
         //인증된 사용자 이름을 dto에 집어 넣음
-        mainPageDto.setWriter(getSessionUser());
+        mainPageDto.setWriter(userAuthorization.getSessionUser());
 
         //만약 노출중인 페이지가 하나도 없으면 순서에 1을 집어 넣음
         if(mainPageRepository.findAllExposure().isEmpty()) {
@@ -125,14 +127,5 @@ public class MainPageService {
             mainPageDtoArrayList.add(mainPageDto);
         }
         return mainPageDtoArrayList;
-    }
-
-    //현재 인증된 사용자 가져오기
-    public String getSessionUser(){
-        //현재 인증된 사용자 가져오는 코드
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails)principal).getUsername();
-
-        return username;
     }
 }

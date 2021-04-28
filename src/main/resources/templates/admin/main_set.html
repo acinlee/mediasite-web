@@ -121,7 +121,7 @@
                         <td><span th:text="${#temporals.format(list.register_date, 'yyyy-MM-dd')}"></span></td>
                         <td><span th:text="${list.writer}"></span></td>
                         <td>
-                            <button class="purple_btn" th:name="${list.getId()}" onclick="changeExposure(this.name)">
+                            <button type="button" class="purple_btn" th:name="${list.getId()}" onclick="changeExposure(this.name)">
                                 미노출
                             </button>
                         </td>
@@ -151,16 +151,17 @@
         </div>
 
         <div class="main_set unexposure">
-            <table class="table_type1">
-                <colgroup>
-                    <col width="100px">
-                    <col width="280px">
-                    <col width="*">
-                    <col width="8%">
-                    <col width="6%">
-                    <col width="11%">
-                </colgroup>
-                <thead>
+            <form th:action="@{/admin/mainpage/post_edit}" id="edit_post_false" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+                <table class="table_type1">
+                    <colgroup>
+                        <col width="100px">
+                        <col width="280px">
+                        <col width="*">
+                        <col width="8%">
+                        <col width="6%">
+                        <col width="11%">
+                    </colgroup>
+                    <thead>
                     <tr>
                         <th>순서</th>
                         <th>이미지</th>
@@ -169,53 +170,59 @@
                         <th>작성자</th>
                         <th>관리</th>
                     </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${mainPageDtoListFalse.isEmpty()}">
-                    <td>게시글 없음</td>
-                </tr>
-                <tr th:each="list, item : ${mainPageDtoListFalse}">
-                    <td>
-                        <input type="hidden" th:id="${'id'+item.index}" th:name="${'id'+item.index}"
-                               th:value="${list.getId()}" />
-                        <input type="text" class="w_70 text_center" th:value="${item.index+1}">
-                    </td>
-                    <td>
-                        <div class="banner_con dis_inblock">
-                            <img th:src="@{${'/upload/' + list.file.getFilename()}}" alt="">
-                        </div>
-                        <div class="dis_inblock text_left">
-                            <input type="file" id="file_11" class="hide">
-                            <label for="file_11" class="purple_btn">이미지 변경</label>
-                            <p th:id="${'list_file_size'+item.index}" th:text="${list.getFile().getFilesize()}"></p>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="table_info">
-                            <span>서비스명</span>
-                            <input type="text" th:id="${'title'+item.index}" th:name="${'title'+item.index}"
-                                   th:value="${list.title}">
-                            <span>플랫폼</span>
-                            <input type="text" th:id="${'flatForm'+item.index}" th:name="${'flatForm'+item.index}"
-                                   th:value="${list.flatForm}">
-                            <div class="martop_12">
-                                <span>발주처</span>
-                                <input type="text" th:id="${'ordering_company'+item.index}" th:name="${'ordering_company'+item.index}"
-                                       th:value="${list.ordering_company}">
-                                <span>런칭일</span>
-                                <input type="text" th:id="${'launching_date'+item.index}" th:name="${'launching_date'+item.index}"
-                                       th:value="${list.launching_date}">
+                    </thead>
+                    <tbody>
+                    <tr th:if="${mainPageDtoListFalse.isEmpty()}">
+                        <td>게시글 없음</td>
+                    </tr>
+                    <tr th:each="list, item : ${mainPageDtoListFalse}">
+                        <td>
+                            <input type="hidden" th:id="${'id'+item.index}" th:name="${'id'+item.index}"
+                                   th:value="${list.getId()}"/>
+                            <input type="text" class="w_70 text_center" th:value="${item.index+1}">
+                        </td>
+                        <td>
+                            <div class="banner_con dis_inblock">
+                                <img th:src="@{${'/upload/' + list.file.getFilename()}}" alt="">
                             </div>
-                        </div>
-                    </td>
-                    <td><span th:text="${#temporals.format(list.register_date, 'yyyy-MM-dd')}"></span></td>
-                    <td><span th:text="${list.writer}"></span></td>
-                    <td>
-                        <button class="purple_btn" th:name="${list.getId()}" onclick="changeExposure(this.name)">노출</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                            <div class="dis_inblock text_left">
+                                <input type="file" th:id="${'file_01'+item.index}" class="hide"
+                                       th:name="${'multipartFile'+item.index}" accept=".jpg, .jpeg, .png, .bmp, .gif">
+                                <label th:for="${'file_01'+item.index}" class="purple_btn">이미지 변경</label>
+                                <p th:id="${'list_file_size'+item.index}" th:text="${list.getFile().getFilesize()}"></p>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table_info">
+                                <span>서비스명</span>
+                                <input type="text" th:id="${'title'+item.index}" th:name="${'title'+item.index}"
+                                       th:value="${list.title}">
+                                <span>플랫폼</span>
+                                <input type="text" th:id="${'flatForm'+item.index}" th:name="${'flatForm'+item.index}"
+                                       th:value="${list.flatForm}">
+                                <div class="martop_12">
+                                    <span>발주처</span>
+                                    <input type="text" th:id="${'ordering_company'+item.index}"
+                                           th:name="${'ordering_company'+item.index}"
+                                           th:value="${list.ordering_company}">
+                                    <span>런칭일</span>
+                                    <input type="text" th:id="${'launching_date'+item.index}"
+                                           th:name="${'launching_date'+item.index}"
+                                           th:value="${list.launching_date}">
+                                </div>
+                            </div>
+                        </td>
+                        <td><span th:text="${#temporals.format(list.register_date, 'yyyy-MM-dd')}"></span></td>
+                        <td><span th:text="${list.writer}"></span></td>
+                        <td>
+                            <button type="button" class="purple_btn" th:name="${list.getId()}"
+                                    onclick="changeExposure(this.name)">노출
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
             <div class="paging_con">
                 <ul class="paging clear">
                   <li class="first_page"><a href=""></a></li>
@@ -238,10 +245,10 @@
 
         <div>
         <div class="paging_with clear main_set exposure active">
-            <input type="button" class="big_purple_btn left w_120" value="저장" onclick="submitController()" id="postEditTrue" name="postEditTrue">
+            <input type="button" class="big_purple_btn left w_120" value="저장" onclick="submitControllerTrue()" id="postEditTrue" name="postEditTrue">
         </div>
         <div class="paging_with clear main_set unexposure">
-            <input type="button" class="big_purple_btn left w_120" value="저장" id="postEditFalse" name="postEditFalse">
+            <input type="button" class="big_purple_btn left w_120" value="저장" onclick="submitControllerFalse()" id="postEditFalse" name="postEditFalse">
         </div>
         <div class="paging_with clear">
             <button class="big_purple_btn right img_btn w_120" type="button">신규 등록</button>
@@ -438,7 +445,7 @@
         return check;
     }
 
-    function submitController() {
+    function submitControllerTrue() {
         var listSize = /*[[${mainPageDtoListTrue.size()}]]*/;
         //토큰
         var token = $("meta[name='_csrf']").attr("content");
@@ -459,8 +466,8 @@
         });
 
         form = $('#edit_post_true')[0];
-        formData = new FormData(form)
-        ;
+        formData = new FormData(form);
+
         if(sequence_check() == true){
             $.ajax({
                 enctype: 'multipart/form-data',
@@ -485,43 +492,36 @@
         }
     }
 
-
-    //controller에 값 보내는 함수 (미 노출 탭)
-    $("#postEditFalse").click(function () {
+    function submitControllerFalse() {
+        var listSize = /*[[${mainPageDtoListFalse.size()}]]*/;
         //토큰
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
+        var form;
+        var formData;
 
-        var list = [];
-        var object_id;
-        var title;
-        var flatForm;
-        var ordering_company;
-        var launching_date;
+        $("#edit_post_false").each(function (){
+            for(var i = 0; i<listSize; i++){
+                $(this).find("input[name=id"+i+"]").attr("name", "main[" + i + "].id");
+                $(this).find("input[name=title"+i+"]").attr("name", "main[" + i + "].title");
+                $(this).find("input[name=flatForm"+i+"]").attr("name", "main[" + i + "].flatForm");
+                $(this).find("input[name=ordering_company"+i+"]").attr("name", "main[" + i + "].ordering_company");
+                $(this).find("input[name=launching_date"+i+"]").attr("name", "main[" + i + "].launching_date");
+                $(this).find("input[name=multipartFile"+i+"]").attr("name", "main[" + i + "].multipartFile");
+            }
+        });
 
-        //controller에서 직접 여기에 이런식으로 값을 넣을 수 있음
-        var listSize = /*[[${mainPageDtoListFalse.size()}]]*/;
-        for (var i = 0; i < listSize; i++) {
-            object_id = document.getElementById("id" + i).value;
-            title = document.getElementById("title" + i).value;
-            flatForm = document.getElementById("flatForm" + i).value;
-            ordering_company = document.getElementById("ordering_company" + i).value;
-            launching_date = document.getElementById("launching_date" + i).value;
-
-            list[i] = {
-                "id": object_id,
-                "title": title, "flatForm": flatForm,
-                "ordering_company": ordering_company, "launching_date": launching_date
-            };
-        }
-        //ajax
+        form = $('#edit_post_false')[0];
+        formData = new FormData(form);
         $.ajax({
             enctype: 'multipart/form-data',
             url: '/admin/mainpage/post_edit',
             type: 'post',
             dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(list),
+            contentType: false,
+            cache: false,
+            processData: false,
+            data: formData,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token);	// 헤드의 csrf meta태그를 읽어 CSRF 토큰 함께 전송
             },
@@ -533,8 +533,7 @@
                 console.log(data);
             }
         })
-
-    });
+    }
 
     //노출 상태 변경
     function changeExposure(clicked_name){

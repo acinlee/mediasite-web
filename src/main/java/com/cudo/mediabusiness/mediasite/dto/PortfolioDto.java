@@ -7,40 +7,27 @@ import com.cudo.mediabusiness.mediasite.domain.enumpackage.Exposure;
 import com.cudo.mediabusiness.mediasite.service.PortfolioService;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class PortfolioDto {
     private Long id;
-  /*  private String writer;*/
-
-    @NotEmpty(message = "서비스명은 필수 입니다.")
+    private String writer;
     private String title;
-
-    @NotEmpty(message = "서비스 설명은 필수 입니다.")
     private String content;
-
-    @NotEmpty(message = "플랫폼은 필수 입니다.")
     private List<String> flatform;
-
     private String otherForm;
-
-    @NotEmpty(message = "발주사는 필수 입니다.")
     private String orderingCompany;
-
-    @NotEmpty(message = "런칭일은 필수 입니다.")
     private String launchingDate;
-/*    private LocalDate createdDate;*/
+    private LocalDateTime createdDate;
     private Exposure show_check;
     private int show_sequence;
     /* private String noticeYn;
      private String secretYn;*/
-
-
     private File file;
-
     private List<PortfolioDto> portfolioDtoList;
 
     public class Flatform {
@@ -56,6 +43,7 @@ public class PortfolioDto {
     public Portfolio toEntity() {
         Portfolio build = Portfolio.builder()
                 .id(id)
+                .writer(writer)
                 .title(title)
                 .content(content)
                 .build();
@@ -63,16 +51,19 @@ public class PortfolioDto {
     }
 
     @Builder
-    public PortfolioDto(Long id, String title, String content, List<String> flatform, String otherForm,
-                        String orderingCompany, String launchingDate, Exposure show_check, int show_sequence, String noticeYn, String secretYn, File file) {
+    public PortfolioDto(Long id, String writer, String title, String content, List<String> flatform,
+                        String otherForm, String orderingCompany, String launchingDate, LocalDateTime createdDate,
+                        Exposure show_check, int show_sequence, String noticeYn, String secretYn, File file) {
         this.id = id;
+        this.writer = writer;
         this.title = title;
         this.content = content;
-        this.flatform.addAll(flatform);
-        /*this.flatform = flatform;*/
+    /*    this.flatform.addAll(flatform);*/
+        this.flatform = flatform;
         this.otherForm = otherForm;
         this.orderingCompany = orderingCompany;
         this.launchingDate = launchingDate;
+        this.createdDate = createdDate;
         this.show_check = show_check;
         this.show_sequence = show_sequence;
     /*    this.noticeYn = noticeYn;

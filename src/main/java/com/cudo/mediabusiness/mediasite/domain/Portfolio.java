@@ -3,18 +3,14 @@ package com.cudo.mediabusiness.mediasite.domain;
 import com.cudo.mediabusiness.mediasite.domain.enumpackage.Exposure;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-
-import javax.management.relation.Role;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Portfolio {
 
     @Id @GeneratedValue
@@ -23,7 +19,7 @@ public class Portfolio {
     private Long id;
 
     //작성자
-    //private String writer;
+    private String writer;
 
     //제목
     @Column(length = 40, nullable = false)
@@ -48,7 +44,9 @@ public class Portfolio {
     private String launchingDate;
 
     //등록 날짜
-    //private LocalDate createdDate;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate;
 
     //메인 페이지에 노출 여부
     @Enumerated(EnumType.STRING)
@@ -57,25 +55,25 @@ public class Portfolio {
     private int show_sequence = 0;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "img_01")
+    @JoinColumn(name = "file_id")
     private File file;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "img_03")
-    private File mFile;
+    /*@OneToMany(mappedBy = "portfolio")
+    private List<File> file = new ArrayList<>();*/
 
     @Builder
-    public Portfolio(Long id, String title, String content, String otherForm, String flatform,
-                     String orderingCompany, String launchingDate, File file, File mFile, int show_sequence){
+    public Portfolio(Long id, String writer, String title, String content, String otherForm, String flatform,
+                     String orderingCompany, String launchingDate, LocalDateTime createdDate, File file, int show_sequence){
         this.id = id;
+        this.writer = writer;
         this.title = title;
         this.content = content;
         this.otherForm = otherForm;
         this.flatform = flatform;
         this.orderingCompany = orderingCompany;
         this.launchingDate = launchingDate;
+        this.createdDate = createdDate;
         this.file = file;
-        this.mFile = mFile;
         this.show_sequence = show_sequence;
     }
 

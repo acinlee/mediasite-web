@@ -56,6 +56,16 @@ public class MemberService{
         return findAllMember;
     }
 
+    //특정 유저 조회
+    public MemberDto findByIdMemberDto(String id){
+        Member member = memberRepository.findMemberById(id);
+        MemberDto memberDto = MemberDto.builder()
+                .id(member.getId())
+                .password(member.getPassword())
+                .name(member.getName())
+                .build();
+        return memberDto;
+    }
     /*
     * admin
     * 1. 회원 가입 승인

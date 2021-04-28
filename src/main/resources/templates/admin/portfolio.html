@@ -37,6 +37,7 @@
 <!-- 컨텐츠 영역 -->
 
 <main class="container">
+    <form th:action="@{post}" th:object="${portfolioDto}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
     <h2 class="title">포트폴리오 관리</h2>
     <ul class="portfolio_list">
         <li th:if="${postList.isEmpty()}">
@@ -48,11 +49,11 @@
                     <img src="/images/portfolio_01.png" alt="">
                 </div>
                 <div class="portfolio_txt">
-                    <strong>서비스명</strong>
-                    <input type="text" th:text="${list.title}">
+                    <strong></strong>
+                    <span type="text" th:text="${list.title}"></span>
                     <div>
                         <em>등록일</em>
-                        <span th:text="${list.createdDate}"></span>
+                        <span th:text="${#temporals.format(list.createdDate, 'yyyy-MM-dd')}"></span>
                     </div>
                     <div>
                         <em>작성자</em>
@@ -85,6 +86,7 @@
     <div class="paging_with">
         <a th:href="@{/admin/portfolio/post}" class="big_purple_btn w_120">신규 등록</a>
     </div>
+    </form>
 </main>
 <!-- // 컨텐츠 영역 -->
 

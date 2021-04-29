@@ -1,17 +1,13 @@
 package com.cudo.mediabusiness.mediasite.controller;
 
 import com.cudo.mediabusiness.mediasite.common.UserAuthorization;
-import com.cudo.mediabusiness.mediasite.domain.Portfolio;
 import com.cudo.mediabusiness.mediasite.dto.FileDto;
 import com.cudo.mediabusiness.mediasite.dto.PortfolioDto;
-import com.cudo.mediabusiness.mediasite.repository.PortfolioRepository;
+import com.cudo.mediabusiness.mediasite.repository.FileRepository;
 import com.cudo.mediabusiness.mediasite.service.FileService;
 import com.cudo.mediabusiness.mediasite.service.PortfolioService;
 import com.cudo.mediabusiness.mediasite.util.FileSave;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PageableDefault;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.awt.print.Pageable;
+import javax.validation.Valid;;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +27,7 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
     private final FileService fileService;
     private final UserAuthorization userAuthorization;
+    private final FileRepository fileRepository;
 
     /* 목록 */
     @GetMapping("/admin/portfolio/list")
@@ -62,38 +56,87 @@ public class PortfolioController {
     /* 글쓰기 버튼 누르면 /portfolio.write로 Post요청*/
     /*@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, )*/
     @PostMapping("/admin/portfolio/post")
-    public String write(HttpServletRequest request, @RequestPart("img_01") MultipartFile files,
-                        @RequestPart("img_03") MultipartFile mfiles,
+    public String write(HttpServletRequest request, @RequestParam("img_01") MultipartFile pcFile,
+                        @RequestParam("img_03") MultipartFile mFile,
                         @Valid PortfolioDto portfolioDto, BindingResult result) {
+        portfolioDto.setFlatform(portfolioDto.getFlatform());
         portfolioDto.setWriter(userAuthorization.getSessionUser());
-/*        portfolioDto.setCreatedDate();*/
         Long portfolioId = portfolioService.savePost(portfolioDto);
         //파일 변환 및 저장
         if (portfolioId != null) {
-            //파일 저장 클래스
-            FileSave fileSave = new FileSave();
-            fileSave.fileInfo(files);
+            if(pcFile != null && mFile != null){
+                //파일 저장 클래스
+                //추후에 함수 따로 빼서 만들 예정
+                FileSave fileSavePc = new FileSave();
+                fileSavePc.fileInfo(pcFile);
 
-            //dto에 파일 저장
-            FileDto fileDto = new FileDto();
-            fileDto.setOrigin_file_name(fileSave.getOriginFilename());
-            fileDto.setFilesize(fileSave.getFileSize());
-            fileDto.setFilename(fileSave.getConversionFilename());
-            fileDto.setFilepath(fileSave.getFilePath());
+                //dto에 파일 저장
+                FileDto fileDtoPc = new FileDto();
+                fileDtoPc.setOrigin_file_name(fileSavePc.getOriginFilename());
+                fileDtoPc.setFilesize(fileSavePc.getFileSize());
+                fileDtoPc.setFilename(fileSavePc.getConversionFilename());
+                fileDtoPc.setFilepath(fileSavePc.getFilePath());
 
-            //파일 id 값
-            Long send_id = fileService.saveFile(fileDto);
-            if (send_id != null) {
-                portfolioService.savePost(portfolioId, send_id);
+                //파일 id 값
+                Long send_id = fileService.saveFile(fileDtoPc);
+                if (send_id != null) {
+                    portfolioService.updatePost(portfolioId, send_id);
+                }
+
+                FileSave fileSaveM = new FileSave();
+                fileSaveM.fileInfo(mFile);
+
+                //dto에 파일 저장
+                FileDto fileDtoM = new FileDto();
+                fileDtoM.setOrigin_file_name(fileSaveM.getOriginFilename());
+                fileDtoM.setFilesize(fileSaveM.getFileSize());
+                fileDtoM.setFilename(fileSaveM.getConversionFilename());
+                fileDtoM.setFilepath(fileSaveM.getFilePath());
+
+                //파일 id 값
+                send_id = fileService.saveFile(fileDtoM);
+                if (send_id != null) {
+                    portfolioService.updatePost(portfolioId, send_id);
+                }
             }
+            else if(pcFile != null && mFile == null){
+                FileSave fileSave = new FileSave();
+                fileSave.fileInfo(pcFile);
+
+                //dto에 파일 저장
+                FileDto fileDto = new FileDto();
+                fileDto.setOrigin_file_name(fileSave.getOriginFilename());
+                fileDto.setFilesize(fileSave.getFileSize());
+                fileDto.setFilename(fileSave.getConversionFilename());
+                fileDto.setFilepath(fileSave.getFilePath());
+
+                //파일 id 값
+                Long send_id = fileService.saveFile(fileDto);
+                if (send_id != null) {
+                    portfolioService.updatePost(portfolioId, send_id);
+                }
+            }
+            else if(pcFile != null && mFile == null){
+                FileSave fileSave = new FileSave();
+                fileSave.fileInfo(mFile);
+
+                //dto에 파일 저장
+                FileDto fileDto = new FileDto();
+                fileDto.setOrigin_file_name(fileSave.getOriginFilename());
+                fileDto.setFilesize(fileSave.getFileSize());
+                fileDto.setFilename(fileSave.getConversionFilename());
+                fileDto.setFilepath(fileSave.getFilePath());
+
+                //파일 id 값
+                Long send_id = fileService.saveFile(fileDto);
+                if (send_id != null) {
+                    portfolioService.updatePost(portfolioId, send_id);
+                }
+            }
+
         }
         return "redirect:/admin/portfolio_write";
     }
-
-/*    @GetMapping("/admin/portfolio/post")
-    public String writePost{
-
-    }*/
 
     //플랫폼
     public List<String> getflatformlist() {
@@ -108,11 +151,6 @@ public class PortfolioController {
         return flatformlist;
     }
 
-
-    /*@RequestMapping(value = "/test/modelMap/")
-    public String getMultiRowToModel(@ModelAttribute String string) {
-
-    }*/
     //노출여부
     @GetMapping("/admin/portfolio/showcheck")
     public String showList(Model model) {
@@ -140,11 +178,11 @@ public class PortfolioController {
     }
 
     /* 페이징 처리 */
-    @GetMapping("/portfolio")
+/*    @GetMapping("/portfolio")
     public String boardView(@PageableDefault Pageable pageable, Model model){
         Page<Portfolio> portfolioList = portfolioService.getPortfolioList(pageable);
         model.addAttribute("portfolioList", portfolioList);
         return "portfolio";
-    }
+    }*/
 
 }

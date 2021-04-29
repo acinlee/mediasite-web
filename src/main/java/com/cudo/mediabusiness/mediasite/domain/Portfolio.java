@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -54,16 +56,14 @@ public class Portfolio {
 
     private int show_sequence = 0;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")
-    private File file;
+    private List<File> file = new ArrayList<>();
 
-    /*@OneToMany(mappedBy = "portfolio")
-    private List<File> file = new ArrayList<>();*/
 
     @Builder
-    public Portfolio(Long id, String writer, String title, String content, String otherForm, String flatform,
-                     String orderingCompany, String launchingDate, LocalDateTime createdDate, File file, int show_sequence){
+    public Portfolio(Long id, String writer, String title, String content, String otherForm, String flatform, String orderingCompany,
+                     String launchingDate, LocalDateTime createdDate, List<File> file, Exposure show_check ,int show_sequence){
         this.id = id;
         this.writer = writer;
         this.title = title;
@@ -75,29 +75,12 @@ public class Portfolio {
         this.createdDate = createdDate;
         this.file = file;
         this.show_sequence = show_sequence;
+        this.show_check = show_check;
     }
 
-   /* public class Post {
-        private String title;
-        private String content;
-        private Set<String> flatform;
-        // constructor and getter
-    }*/
-
-    /* public class Flatform {
-
-
-         @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-         @JoinTable(
-                 name = "flaforms_roles",
-                 joinColumns = @JoinColumn(name = "flatform_id"),
-                 inverseJoinColumns = @JoinColumn(name = "flat_id")
-         )
-         private Set<Flatform> flatforms = new HashSet<>();
-
-     }
- */
-    protected Portfolio() {
-
+    public void uploadFile(File file) {
+        this.file = getFile();
     }
+
+    protected Portfolio() { }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 public class MainPageRepository {
     private final EntityManager entityManager;
 
-    
     //메인 페이지 신규 등록
     public Long save(MainPage mainPage){
         entityManager.persist(mainPage);

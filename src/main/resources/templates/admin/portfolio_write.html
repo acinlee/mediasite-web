@@ -60,19 +60,19 @@
                 <th class="important">플랫폼</th>
                 <td>
                     <div class="table_inp">
-                        <input type="checkbox" id="chek_01" class="hide ch_ra" name="flatform" th:check="${portfoliolist}">
+                        <input type="checkbox" id="chek_01" class="hide ch_ra" name="flatform" th:value="${portfoliolist}">
                         <label for="chek_01" class="label check">PC</label>
-                        <input type="checkbox" id="chek_02" class="hide ch_ra" name="flatform" th:check="${portfoliolist}">
+                        <input type="checkbox" id="chek_02" class="hide ch_ra" name="flatform" th:value="${portfoliolist}">
                         <label for="chek_02" class="label check">mobile web</label>
-                        <input type="checkbox" id="chek_03" class="hide ch_ra" name="flatform" th:check="${portfoliolist}">
+                        <input type="checkbox" id="chek_03" class="hide ch_ra" name="flatform" th:value="${portfoliolist}">
                         <label for="chek_03" class="label check">app</label>
-                        <input type="checkbox" id="chek_04" class="hide ch_ra" name="flatform" th:check="${portfoliolist}">
+                        <input type="checkbox" id="chek_04" class="hide ch_ra" name="flatform" th:value="${portfoliolist}">
                         <label for="chek_04" class="label check">PC Client</label>
-                        <input type="checkbox" id="chek_05" class="hide ch_ra" name="flatform" th:check="${portfoliolist}">
+                        <input type="checkbox" id="chek_05" class="hide ch_ra" name="flatform" th:value="${portfoliolist}">
                         <label for="chek_05" class="label check">glass</label>
-                        <input type="checkbox" id="chek_06" class="hide ch_ra" name="flatform" th:check="${portfoliolist}">
+                        <input type="checkbox" id="chek_06" class="hide ch_ra" name="flatform" th:value="${portfoliolist}">
                         <label for="chek_06" class="label check">기타</label>
-                        <input type="text" class="w_200 marleft_12" name="otherflatform" th:field="*{otherForm}">
+                        <input type="text" class="w_200 marleft_12" name="flatform" th:field="*{otherForm}">
                     </div>
 
                 </td>
@@ -80,13 +80,13 @@
             <tr>
                 <th class="important">발주사</th>
                 <td>
-                    <input type="text" class="w_full" th:field="*{orderingCompany}">
+                    <input type="text" class="w_full" name="orderingCompany" th:field="*{orderingCompany}">
                 </td>
             </tr>
             <tr>
                 <th class="important">런칭일</th>
                 <td>
-                    <input type="date" class="w_full" value="yyyy-mm-dd" th:field="*{launchingDate}">
+                    <input type="date" class="w_full" value="yyyy-mm-dd" name="launchingDate" th:field="*{launchingDate}">
                 </td>
             </tr>
             <tr>
@@ -113,13 +113,6 @@
             <tr>
                 <th class="important">모바일 목록 이미지</th>
                 <td>
-                    <!-- 상세 이미지 추가 시 marbtm_12 안에 banner_con이 늘어납니다 -->
-                    <!-- <div class="marbtm_12">
-                        <div class="banner_con dis_inblock">
-                            <img src="../assets/images/img_banner.png" alt="">
-                        </div>
-                    </div> -->
-
                     <input type="file" id="img_03" name="img_03" class="hide">
                     <label for="img_03" class="big_purple_btn w_120">찾아보기</label>
                     <p class="martop_6 col_purple">이미지 포맷 : jpg, png 1MB 이하 등록 가능</p>
@@ -138,10 +131,6 @@
                     <label for="ra_01" class="label radio">노출 함</label>
                     <input type="radio" id="ra_02" class="hide ch_ra" name="show_sequence" value="0">
                     <label for="ra_02" class="label radio marleft_20">노출 안함</label>
-                    <!--<input type="radio" class="hide ch_ra" th:value="*{noticeYn}" id="noticeYn" name="noticeYn" th:checked="*{#strings.equals( noticeYn, 'Y' )}" >
-                      <label class="label radio" for="noticeYn">노출 함</label>
-                      <input type="radio" class="hide ch_ra" th:value="*{secretYn}" id="secretYn" name="secretYn" th:checked="*{#strings.equals( secretYn, 'Y' )}">
-                      <label class="label radio marleft_20" for="secretYn">노출 안함</label>-->
                 </td>
             </tr>
             </tbody>
@@ -156,19 +145,18 @@
 </main>
 <!-- // 컨텐츠 영역 -->
 
-<script src="/js/common.js">
-    /*    function registerBoard(form) {
-            form.noticeYn.value = form.noticeYn.checked == false ? 'N' : 'Y';
-            form.secretYn.value = form.secretYn.checked == false ? 'N' : 'Y';
-            var result = (
-                isValid(form.title, "제목", null, null)
-                && isValid(form.writer, "이름", null, null)
-                && isValid(form.content, "내용", null, null)
-            );
-            if ( result == false ) {
-                return false;
+<script src="/js/common.js"></script>
+<script th:inline="javascript">
+
+    //체크박스
+    window.onload = function(){
+        for(var i = 0; i < document.getElementsByTagName('input').length; i++){
+            if(document.getElementsByTagName('input')[i].getAttribute('type') == 'checkbox'){
+                document.getElementsByTagName('input')[i].checked = true;
             }
-        }*/
+        }
+    };
+
 </script>
 </body>
 

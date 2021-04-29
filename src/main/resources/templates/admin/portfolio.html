@@ -35,9 +35,7 @@
 <!-- // header -->
 
 <!-- 컨텐츠 영역 -->
-
 <main class="container">
-    <form th:action="@{post}" th:object="${portfolioDto}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
     <h2 class="title">포트폴리오 관리</h2>
     <ul class="portfolio_list">
         <li th:if="${postList.isEmpty()}">
@@ -49,11 +47,11 @@
                     <img src="/images/portfolio_01.png" alt="">
                 </div>
                 <div class="portfolio_txt">
-                    <strong></strong>
-                    <span type="text" th:text="${list.title}"></span>
+                    <strong>서비스명</strong>
+                    <input type="text" th:text="${list.title}">
                     <div>
                         <em>등록일</em>
-                        <span th:text="${#temporals.format(list.createdDate, 'yyyy-MM-dd')}"></span>
+                        <span th:text="${list.createdDate}"></span>
                     </div>
                     <div>
                         <em>작성자</em>
@@ -86,11 +84,26 @@
     <div class="paging_with">
         <a th:href="@{/admin/portfolio/post}" class="big_purple_btn w_120">신규 등록</a>
     </div>
-    </form>
 </main>
 <!-- // 컨텐츠 영역 -->
 
 <script src="../assets/js/common.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function (){
+        let today = new Date();
+
+        let year = today.getFullYear(); // 년도
+        let month = today.getMonth() + 1;  // 월
+        let date = today.getDate();  // 날짜
+        if(month.toString().length == 1){
+            $("#today_date").text(year + '-0' + month + "-" + date);
+        }
+        else {
+            $("#today_date").text(year + '-' + month + "-" + date);
+        }
+        fileSizeCheck();
+    });
+</script>
 </body>
 
 </html>
